@@ -1,0 +1,155 @@
+/* General and Body Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+}
+
+.text-success {
+  color: #198754 !important;
+}
+
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.btn-success:hover {
+  background-color: #157347;
+  border-color: #157347;
+}
+
+/* ------------------------------------------- */
+/* #Header */
+.navbar-brand .text-success {
+  font-weight: bold;
+}
+
+.nav-link {
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #198754 !important;
+}
+
+/* ------------------------------------------- */
+/* #HomePage */
+.homepage-hero {
+  background: linear-gradient(to right, #e0f7f7, #e6f7ff);
+  padding: 8rem 0;
+}
+
+.homepage-hero h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.homepage-cta-buttons .btn {
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+}
+
+/* ------------------------------------------- */
+/* #MedicineSearchPage */
+.medicine-search-hero {
+  background: linear-gradient(to right, #e0f7f7, #e6f7ff);
+  padding: 6rem 0;
+}
+
+.medicine-search-hero h1 {
+  font-weight: bold;
+}
+
+.medicine-search-bar {
+  max-width: 600px;
+}
+
+.popular-searches .badge {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.popular-searches .badge:hover {
+  background-color: #e9ecef;
+}
+
+.medicine-card .badge {
+  font-size: 0.9em;
+}
+
+/* ------------------------------------------- */
+/* #FindDoctorsPage */
+.doctors-hero {
+  background: linear-gradient(to right, #e0f7f7, #e6f7ff);
+  padding: 6rem 0;
+}
+
+.doctor-filters {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-avatar {
+  width: 100px;
+  height: 100px;
+  background-color: #e6f7ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.doctor-avatar .bi {
+  font-size: 3rem;
+  color: #198754;
+}
+
+/* ------------------------------------------- */
+/* #ContactPage */
+.contact-hero {
+  background: linear-gradient(to right, #e0f7f7, #e6f7ff);
+  padding: 6rem 0;
+}
+
+.contact-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.contact-info-list li i {
+  color: #198754;
+  font-size: 1.25rem;
+}
+
+/* ------------------------------------------- */
+/* #Footer */
+.footer-links .nav-link {
+  color: #6c757d;
+  padding: 0.1rem 0;
+}
+
+.footer-links .nav-link:hover {
+  color: #007bff !important;
+}
+
+.social-icons a {
+  color: #6c757d;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+
+.social-icons a:hover {
+  color: #007bff;
+}
