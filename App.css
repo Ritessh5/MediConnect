@@ -1,10 +1,11 @@
 /* General and Body Styles */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f8f9fa;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* Add this gradient to the body */
+  background: linear-gradient(to bottom, #f8f9fa, #e6f7f7); 
 }
 
 main {
@@ -31,15 +32,34 @@ main {
   font-weight: bold;
 }
 
+/* --- UPDATED FOR HOVER EFFECT --- */
 .nav-link {
-  transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out, background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem !important;
 }
 
 .nav-link:hover {
-  color: #198754 !important;
+  color: #fff !important;
+  background-color: #198754;
+  transform: translateY(-2px);
 }
 
+/* --- ADDED FOR PROFILE BUTTON STYLE --- */
+.dropdown-toggle.nav-link {
+  color: var(--bs-nav-link-color);
+  background-color: transparent !important;
+  border: none;
+  box-shadow: none;
+}
+
+/* This rule will ensure the hover effect applies correctly */
+.dropdown-toggle.nav-link:hover {
+  background-color: #198754 !important;
+  color: #fff !important;
+}
 /* ------------------------------------------- */
+
 /* #HomePage */
 .homepage-hero {
   background: linear-gradient(to right, #e0f7f7, #e6f7ff);
@@ -152,4 +172,130 @@ main {
 
 .social-icons a:hover {
   color: #007bff;
+}
+
+/* --- ADDED FOR FOOTER STYLING --- */
+.bg-dark-theme {
+  background-color: #198754 !important;
+}
+
+.footer-links .nav-link,
+.social-icons a,
+.bg-dark-theme .text-white,
+.bg-dark-theme .text-white-50 {
+  transition: color 0.2s ease-in-out;
+}
+
+.footer-links .nav-link:hover {
+  color: #fff !important; /* White on hover */
+}
+
+.social-icons a:hover {
+  color: #fff !important; /* White on hover */
+}
+
+/* Fade In Up Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-in {
+  animation-name: fadeInUp;
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+/* Splash Screen Styles */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff; /* A clean white background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's on top of everything */
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.splash-screen.fade-out {
+  opacity: 0;
+}
+
+.splash-screen-logo {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* --- Live Chat Component Styling --- */
+.chat-container {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 500px; /* Or a specific height */
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.message-bubble-wrapper {
+  max-width: 80%;
+  display: flex;
+}
+
+.message-bubble {
+  padding: 0.75rem 1rem;
+  border-radius: 1.5rem;
+  word-wrap: break-word;
+}
+
+.message-bubble-wrapper.user {
+  justify-content: flex-end;
+  align-self: flex-end;
+}
+
+.message-bubble-wrapper.user .message-bubble {
+  background-color: #198754;
+  color: #fff;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.message-bubble-wrapper.doctor {
+  justify-content: flex-start;
+  align-self: flex-start;
+}
+
+.message-bubble-wrapper.doctor .message-bubble {
+  background-color: #e9ecef;
+  color: #212529;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.chat-form {
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
 }
