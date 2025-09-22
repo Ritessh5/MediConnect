@@ -5,13 +5,13 @@ import './App.css';
 const HomePage = () => {
   return (
     <div className="container text-center py-5">
-      <h1 className="fw-bold mb-3" style={{ fontSize: '3rem' }}>
+      <h1 className="fw-bold mb-3 animate-fade-in" style={{ fontSize: '3rem', animationDelay: '0.2s' }}>
         Smart Health <span className="text-success">Consultation</span>
       </h1>
-      <p className="lead mb-4">
+      <p className="lead mb-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
         Connect with qualified doctors online, search medicines by condition, and manage your health records - all in one secure platform.
       </p>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center animate-fade-in" style={{ animationDelay: '0.6s' }}>
         <Link to="/medicine-search" className="btn btn-success me-3 px-4 py-2">
           <i className="bi bi-search me-2"></i> Search Medicines
         </Link>
