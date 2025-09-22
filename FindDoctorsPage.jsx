@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './App.css';
 
 const doctors = [
@@ -8,20 +9,41 @@ const doctors = [
     experience: 12,
     rating: 4.8,
     degree: 'MBBS, MD',
-    price: 50,
+    price: 450, 
+    isChatAvailable: true,
+    isVideoCallAvailable: true,
   },
-  // Add more doctor data here
+  {
+    name: 'Dr. David Lee',
+    specialization: 'Cardiology',
+    experience: 8,
+    rating: 4.5,
+    degree: 'MD',
+    price: 800, 
+    isChatAvailable: true,
+    isVideoCallAvailable: false, 
+  },
+  {
+    name: 'Dr. Emily Chen',
+    specialization: 'Pediatrics',
+    experience: 10,
+    rating: 4.9,
+    degree: 'MBBS',
+    price: 600, 
+    isChatAvailable: true,
+    isVideoCallAvailable: true,
+  },
 ];
 
 const FindDoctorsPage = () => {
   return (
     <div className="container py-5">
-      <div className="text-center mb-5">
+      <div className="text-center mb-5 animate-fade-in" style={{ animationDelay: '0.2s' }}>
         <h1 className="fw-bold">Find & Consult Doctors</h1>
         <p className="lead">Connect with qualified healthcare professionals for online consultations</p>
       </div>
 
-      <div className="card p-4 mb-5">
+      <div className="card p-4 mb-5 animate-fade-in" style={{ animationDelay: '0.4s' }}>
         <form>
           <div className="row g-3 align-items-end">
             <div className="col-md-4">
@@ -45,8 +67,8 @@ const FindDoctorsPage = () => {
               <label className="form-label">Price Range</label>
               <select className="form-select">
                 <option>Any Price</option>
-                <option>$0 - $50</option>
-                <option>$51 - $100</option>
+                <option>₹0 - ₹500</option>
+                <option>₹501 - ₹1000</option>
               </select>
             </div>
             <div className="col-auto d-flex justify-content-end">
@@ -57,7 +79,7 @@ const FindDoctorsPage = () => {
         </form>
       </div>
 
-      <div className="row gy-4">
+      <div className="row gy-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
         {doctors.map((doctor, index) => (
           <div key={index} className="col-md-6 col-lg-4">
             <div className="card p-4 text-center">
@@ -65,12 +87,24 @@ const FindDoctorsPage = () => {
                 <div className="doctor-avatar"></div>
               </div>
               <h5 className="fw-bold text-success">{doctor.name}</h5>
-              <p className="text-muted">{doctor.specialization}</p>
+              <p className="fw-bold text-muted">{doctor.specialization}</p> 
               <ul className="list-unstyled text-start mt-3">
                 <li><i className="bi bi-briefcase me-2"></i> {doctor.experience} years experience</li>
                 <li><i className="bi bi-star-fill me-2 text-warning"></i> {doctor.rating} (Excellent rating)</li>
-                <li><i className="bi bi-currency-dollar me-2"></i> {doctor.price}</li>
+                <li><i className="bi bi-currency-rupee me-2"></i> {doctor.price}</li> 
               </ul>
+              <div className="mt-3 d-flex justify-content-center">
+                {doctor.isChatAvailable && (
+                  <Link to="/chat" className="btn btn-success me-2">
+                    <i className="bi bi-chat-dots me-2"></i> Chat Now
+                  </Link>
+                )}
+                {doctor.isVideoCallAvailable && ( 
+                  <Link to="/chat" className="btn btn-outline-primary">
+                    <i className="bi bi-camera-video-fill me-2"></i> Video Call
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         ))}
