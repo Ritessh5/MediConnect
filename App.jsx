@@ -12,6 +12,7 @@ import ContactPage from './ContactPage.jsx';
 import MyProfile from './MyProfile.jsx';
 import SplashScreen from './SplashScreen.jsx';
 import Chat from './Chat.jsx'; 
+import ParticlesBackground from './ParticlesBackground.jsx';
 import './App.css';
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
     // Set up the router for navigation
     <Router>
       <div className="d-flex flex-column min-vh-100">
+        {/* Render the particles background behind all other content */}
+        <ParticlesBackground />
         <Header />
         <main className="flex-grow-1">
           {/* Define the routes for different pages */}

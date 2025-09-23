@@ -1,5 +1,6 @@
 // Import the React library and necessary hooks
 import React, { useState } from 'react';
+// Import the main application CSS file
 import './App.css';
 
 // Define the functional component for the medicine search page
@@ -25,10 +26,42 @@ const MedicineSearchPage = () => {
           {
             name: 'Paracetamol',
             alternativeName: 'Acetaminophen',
-            description: 'Pain reliever and fever reducer',
+            description: 'Pain reliever and fever reducer, commonly used for mild to moderate pain and fever.',
             treats: ['Fever', 'Headache', 'Pain'],
             forms: ['Tablet', 'Syrup', 'Suspension'],
             isOTC: true,
+          },
+          {
+            name: 'Ibuprofen',
+            alternativeName: 'Advil, Motrin',
+            description: 'A nonsteroidal anti-inflammatory drug (NSAID) used for pain, inflammation, and fever.',
+            treats: ['Fever', 'Inflammation', 'Headache'],
+            forms: ['Tablet', 'Gel Cap', 'Liquid'],
+            isOTC: true,
+          },
+          {
+            name: 'Aspirin',
+            alternativeName: 'Acetylsalicylic Acid',
+            description: 'An NSAID and anti-platelet agent, effective for reducing fever and inflammation.',
+            treats: ['Fever', 'Pain', 'Inflammation'],
+            forms: ['Tablet', 'Chewable Tablet'],
+            isOTC: true,
+          },
+          {
+            name: 'Naproxen',
+            alternativeName: 'Aleve',
+            description: 'A long-lasting NSAID used for pain, fever, and inflammation, often providing relief for up to 12 hours.',
+            treats: ['Fever', 'Inflammation', 'Pain'],
+            forms: ['Tablet', 'Gel Cap'],
+            isOTC: true,
+          },
+          {
+            name: 'Diclofenac',
+            alternativeName: 'Voltaren',
+            description: 'A powerful NSAID prescribed for severe pain and inflammation, available in various forms.',
+            treats: ['Fever', 'Pain', 'Inflammation'],
+            forms: ['Tablet', 'Topical Gel', 'Injection'],
+            isOTC: false,
           },
         ]);
       } else {
@@ -77,7 +110,11 @@ const MedicineSearchPage = () => {
         <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
           {searchResults.map((medicine, index) => (
             // Card to display a single medicine result
-            <div key={index} className="card p-4 mb-4">
+            <div 
+              key={index} 
+              className="card p-4 mb-4 card-animate-in"
+              style={{ animationDelay: `${index * 0.1}s` }} // Staggered animation delay
+            >
               <div className="row">
                 <div className="col">
                   <h2 className="d-inline">{medicine.name}</h2>
