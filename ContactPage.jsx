@@ -1,8 +1,10 @@
+// Import the React library and the useState hook
 import React, { useState } from 'react';
 import './App.css';
 
+// Define the functional component for the contact page
 const ContactPage = () => {
-  // 1. State for form inputs and validation errors
+  // 1. State to manage form data and input values
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -13,9 +15,10 @@ const ContactPage = () => {
     message: ''
   });
 
+  // State to store form validation errors
   const [errors, setErrors] = useState({});
 
-  // 2. Handle form input changes
+  // 2. Handle form input changes dynamically
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -24,7 +27,7 @@ const ContactPage = () => {
     }));
   };
 
-  // 3. Form validation logic
+  // 3. Function to validate form inputs
   const validateForm = () => {
     let newErrors = {};
     let isValid = true;
@@ -70,27 +73,33 @@ const ContactPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      // Alert and log data on successful validation
       alert("Form submitted successfully!");
       console.log("Form Data:", formData);
       // Here you would typically send data to a backend API
     } else {
+      // Log errors if validation fails
       console.log("Form has validation errors.");
     }
   };
 
   return (
+    // Main container for the contact page
     <div className="container py-5">
+      {/* Page header and subtitle */}
       <div className="text-center mb-5">
         <h1 className="fw-bold">Contact MediConnect</h1>
         <p className="lead">Get in touch with our support team for any questions or assistance</p>
       </div>
       
       <div className="row g-4">
+        {/* Contact form section */}
         <div className="col-md-8">
           <div className="card p-4">
             <h4 className="mb-4">Send us a Message</h4>
             <form onSubmit={handleSubmit}>
               <div className="row">
+                {/* First Name input field */}
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">First Name <span className="text-danger">*</span></label>
@@ -102,9 +111,11 @@ const ContactPage = () => {
                       value={formData.firstName}
                       onChange={handleChange}
                     />
+                    {/* Display validation error message */}
                     {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
                   </div>
                 </div>
+                {/* Last Name input field */}
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">Last Name <span className="text-danger">*</span></label>
@@ -116,11 +127,13 @@ const ContactPage = () => {
                       value={formData.lastName}
                       onChange={handleChange}
                     />
+                    {/* Display validation error message */}
                     {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
                   </div>
                 </div>
               </div>
               <div className="row">
+                {/* Email input field */}
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">Email Address <span className="text-danger">*</span></label>
@@ -132,9 +145,11 @@ const ContactPage = () => {
                       value={formData.email}
                       onChange={handleChange}
                     />
+                    {/* Display validation error message */}
                     {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                   </div>
                 </div>
+                {/* Phone Number input field */}
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">Phone Number</label>
@@ -149,6 +164,7 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
+              {/* Subject dropdown */}
               <div className="mb-3">
                 <label className="form-label">Subject <span className="text-danger">*</span></label>
                 <select 
@@ -162,8 +178,10 @@ const ContactPage = () => {
                   <option value="Technical Support">Technical Support</option>
                   <option value="Billing Question">Billing Question</option>
                 </select>
+                {/* Display validation error message */}
                 {errors.subject && <div className="invalid-feedback">{errors.subject}</div>}
               </div>
+              {/* Priority radio buttons */}
               <div className="mb-3">
                 <label className="form-label">Priority Level</label>
                 <div>
@@ -181,6 +199,7 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
+              {/* Message textarea */}
               <div className="mb-3">
                 <label className="form-label">Message <span className="text-danger">*</span></label>
                 <textarea 
@@ -191,12 +210,15 @@ const ContactPage = () => {
                   value={formData.message}
                   onChange={handleChange}
                 ></textarea>
+                {/* Display validation error message */}
                 {errors.message && <div className="invalid-feedback">{errors.message}</div>}
               </div>
+              {/* Submit button */}
               <button type="submit" className="btn btn-success w-100">Send Message</button>
             </form>
           </div>
         </div>
+        {/* Contact information section */}
         <div className="col-md-4">
           <div className="card p-4 h-100 bg-light">
             <h4 className="mb-4">Contact Information</h4>
@@ -221,4 +243,5 @@ const ContactPage = () => {
   );
 };
 
+// Export the component for use in other files
 export default ContactPage;

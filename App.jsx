@@ -1,3 +1,4 @@
+// Import necessary React hooks and components
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,25 +15,31 @@ import Chat from './Chat.jsx';
 import './App.css';
 
 function App() {
+  // State to control the visibility of the splash screen
   const [showSplash, setShowSplash] = useState(true);
 
+  // useEffect hook to hide the splash screen after 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
     }, 2000);
 
+    // Cleanup function to clear the timer
     return () => clearTimeout(timer);
   }, []);
 
+  // Conditionally render the SplashScreen component
   if (showSplash) {
     return <SplashScreen />;
   }
 
   return (
+    // Set up the router for navigation
     <Router>
       <div className="d-flex flex-column min-vh-100">
         <Header />
         <main className="flex-grow-1">
+          {/* Define the routes for different pages */}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/medicine-search" element={<MedicineSearchPage />} />
@@ -48,4 +55,5 @@ function App() {
   );
 }
 
+// Export the App component for use in other files
 export default App;
