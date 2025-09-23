@@ -11,7 +11,7 @@ const HomePage = () => {
     <div className="container text-center py-5">
       {/* Main heading with animated fading effect */}
       <h1 className="fw-bold mb-3 animate-fade-in" style={{ fontSize: '3rem', animationDelay: '0.2s' }}>
-        Smart Health <span className="text-success">Consultation</span>
+        Smart Health <span style={{ color: '#198754' }}>Consultation</span>
       </h1>
       {/* Lead paragraph with animated fading effect */}
       <p className="lead mb-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>

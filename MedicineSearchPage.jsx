@@ -47,22 +47,6 @@ const MedicineSearchPage = () => {
             forms: ['Tablet', 'Chewable Tablet'],
             isOTC: true,
           },
-          {
-            name: 'Naproxen',
-            alternativeName: 'Aleve',
-            description: 'A long-lasting NSAID used for pain, fever, and inflammation, often providing relief for up to 12 hours.',
-            treats: ['Fever', 'Inflammation', 'Pain'],
-            forms: ['Tablet', 'Gel Cap'],
-            isOTC: true,
-          },
-          {
-            name: 'Diclofenac',
-            alternativeName: 'Voltaren',
-            description: 'A powerful NSAID prescribed for severe pain and inflammation, available in various forms.',
-            treats: ['Fever', 'Pain', 'Inflammation'],
-            forms: ['Tablet', 'Topical Gel', 'Injection'],
-            isOTC: false,
-          },
         ]);
       } else {
         setSearchResults([]);

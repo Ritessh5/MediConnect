@@ -37,7 +37,7 @@ const MyProfile = () => {
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className="form-label fw-bold">Phone Number</label>
-                  <p>+1 (555) 123-4567</p>
+                  <p>+91 6523181630</p>
                 </div>
                 <div className="col-md-6 mb-3">
                   <label className="form-label fw-bold">Gender</label>
@@ -49,7 +49,7 @@ const MyProfile = () => {
                 </div>
                 <div className="col-md-12 mb-3">
                   <label className="form-label fw-bold">Address</label>
-                  <p>123 Main Street, Anytown, USA 12345</p>
+                  <p>Mumbai, Maharashtra-400003</p>
                 </div>
               </div>
             </div>

@@ -3,7 +3,7 @@ import React from 'react';
 // Import Link for navigation without page reload
 import { Link } from 'react-router-dom';
 import './App.css';
-import logo from './Gemini_Logo.png';
+import logo from './MediConnectLogo.png';
 
 // Define the functional component for the header
 const Header = () => {

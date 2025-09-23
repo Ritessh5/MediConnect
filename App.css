@@ -13,7 +13,8 @@ main {
 }
 
 .text-success {
-  color: #198754 !important;
+  font-family: 'Rosario', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #183e9f !important;
 }
 
 .btn-success {
