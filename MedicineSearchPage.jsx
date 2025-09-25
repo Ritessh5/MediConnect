@@ -1,5 +1,6 @@
 // Import the React library and necessary hooks
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 // Import the main application CSS file
 import './App.css';
 
@@ -64,8 +65,19 @@ const MedicineSearchPage = () => {
         <p className="lead">Enter a disease, symptom, or medicine name to find relevant medications</p>
       </div>
 
+      {/* Safety warning banner */}
+      <div className="bg-danger text-white p-4 rounded mb-5 animate-fade-in d-flex flex-column flex-md-row align-items-center justify-content-between" style={{ animationDelay: '0.4s' }}>
+        <div className="me-md-4 mb-3 mb-md-0">
+          <h5 className="fw-bold text-white"><i className="bi bi-exclamation-triangle-fill me-2"></i> Important Safety Information</h5>
+          <p className="m-0 small">This tool is for informational purposes only. Always consult with a healthcare professional before taking any medication. Follow prescription instructions and never exceed recommended dosages.</p>
+        </div>
+        <Link to="/find-doctors" className="btn btn-light text-success fw-bold flex-shrink-0">
+          <i className="bi bi-person-circle me-2"></i> Consult a Doctor
+        </Link>
+      </div>
+
       {/* Search form with input and search button */}
-      <form onSubmit={handleSearch} className="mb-5 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+      <form onSubmit={handleSearch} className="mb-5 animate-fade-in" style={{ animationDelay: '0.6s' }}>
         <div className="input-group mx-auto" style={{ maxWidth: '600px' }}>
           <input
             type="text"
@@ -91,7 +103,7 @@ const MedicineSearchPage = () => {
         </div>
       ) : searchResults.length > 0 ? (
         // Display search results if found
-        <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
+        <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
           {searchResults.map((medicine, index) => (
             // Card to display a single medicine result
             <div 
@@ -133,7 +145,7 @@ const MedicineSearchPage = () => {
         </div>
       ) : (
         // Display a message if no medicines are found
-        <div className="text-center mt-5 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+        <div className="text-center mt-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <p className="text-muted">No medicines found. Please try a different search term.</p>
         </div>
       )}

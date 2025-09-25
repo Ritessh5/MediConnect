@@ -13,6 +13,7 @@ import MyProfile from './MyProfile.jsx';
 import SplashScreen from './SplashScreen.jsx';
 import Chat from './Chat.jsx'; 
 import ParticlesBackground from './ParticlesBackground.jsx';
+import FAQPage from './FAQPage.jsx'; // Import the new FAQPage component
 import './App.css';
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/chat" element={<Chat />} /> 
+            <Route path="/faq" element={<FAQPage />} /> {/* Add the new route for the FAQ page */}
           </Routes>
         </main>
         <Footer />

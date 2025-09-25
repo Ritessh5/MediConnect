@@ -15,7 +15,7 @@ const HomePage = () => {
       </h1>
       {/* Lead paragraph with animated fading effect */}
       <p className="lead mb-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-        Connect with qualified doctors online, search medicines by condition, and manage your health records - all in one secure platform.
+        Connect with qualified doctors online, search medicines by condition and manage your health records - all in one secure platform.
       </p>
       {/* Container for call-to-action buttons */}
       <div className="d-flex justify-content-center animate-fade-in" style={{ animationDelay: '0.6s' }}>

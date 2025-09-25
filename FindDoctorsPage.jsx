@@ -1,7 +1,8 @@
-// Import the React library
-import React from 'react';
+// Import the React library and necessary hooks
+import React, { useState } from 'react';
 // Import Link for navigation
 import { Link } from 'react-router-dom';
+import BookAppointmentModal from './BookAppointmentModal.jsx'; // Import the new component
 import './App.css';
 
 // Hardcoded data for a list of doctors
@@ -40,20 +41,29 @@ const doctors = [
 
 // Define the functional component for the Find Doctors page
 const FindDoctorsPage = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState('');
+
+  const handleBookAppointment = (doctorName) => {
+    setSelectedDoctor(doctorName);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedDoctor('');
+  };
+
   return (
-    // Main container for the page
     <div className="container py-5">
-      {/* Page header and subtitle */}
       <div className="text-center mb-5 animate-fade-in" style={{ animationDelay: '0.2s' }}>
         <h1 className="fw-bold">Find & Consult Doctors</h1>
         <p className="lead">Connect with qualified healthcare professionals for online consultations</p>
       </div>
 
-      {/* Filter form for searching doctors */}
       <div className="card p-4 mb-5 animate-fade-in" style={{ animationDelay: '0.4s' }}>
         <form>
           <div className="row g-3 align-items-end">
-            {/* Specialization filter dropdown */}
             <div className="col-md-4">
               <label className="form-label">Specialization</label>
               <select className="form-select">
@@ -63,7 +73,6 @@ const FindDoctorsPage = () => {
                 <option>Pediatrics</option>
               </select>
             </div>
-            {/* Consultation type filter dropdown */}
             <div className="col-md-4">
               <label className="form-label">Consultation Type</label>
               <select className="form-select">
@@ -72,7 +81,6 @@ const FindDoctorsPage = () => {
                 <option>Chat</option>
               </select>
             </div>
-            {/* Price range filter dropdown */}
             <div className="col-md-4">
               <label className="form-label">Price Range</label>
               <select className="form-select">
@@ -81,7 +89,6 @@ const FindDoctorsPage = () => {
                 <option>₹501 - ₹1000</option>
               </select>
             </div>
-            {/* Apply and Clear filter buttons */}
             <div className="col-auto d-flex justify-content-end">
               <button type="submit" className="btn btn-success me-2">Apply Filters</button>
               <button type="button" className="btn btn-outline-secondary">Clear</button>
@@ -90,47 +97,39 @@ const FindDoctorsPage = () => {
         </form>
       </div>
 
-      {/* Grid container for displaying doctor cards */}
       <div className="row gy-4 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-        {/* Map over the doctors array to create a card for each doctor */}
         {doctors.map((doctor, index) => (
           <div key={index} className="col-md-6 col-lg-4">
             <div className="card p-4 text-center">
-              {/* Doctor avatar */}
               <div className="d-flex justify-content-center mb-3">
                 <div className="doctor-avatar"></div>
               </div>
-              {/* Doctor's name and specialization */}
               <h5 className="fw-bold text-success">{doctor.name}</h5>
               <p className="fw-bold text-muted">{doctor.specialization}</p> 
-              {/* List of doctor's details */}
               <ul className="list-unstyled text-start mt-3">
                 <li><i className="bi bi-briefcase me-2"></i> {doctor.experience} years experience</li>
                 <li><i className="bi bi-star-fill me-2 text-warning"></i> {doctor.rating} (Excellent rating)</li>
                 <li><i className="bi bi-currency-rupee me-2"></i> {doctor.price}</li> 
               </ul>
-              {/* Container for consultation buttons */}
-              <div className="mt-3 d-flex justify-content-center">
-                {/* Conditionally render Chat button */}
+              <div className="mt-3 d-flex flex-column">
                 {doctor.isChatAvailable && (
-                  <Link to="/chat" className="btn btn-success me-2">
-                    <i className="bi bi-chat-dots me-2"></i> Chat Now
+                  <Link to="/chat" className="btn btn-success mb-2">
+                    <i className="bi bi-chat-dots me-2"></i> Start Chat
                   </Link>
                 )}
-                {/* Conditionally render Video Call button */}
                 {doctor.isVideoCallAvailable && ( 
-                  <Link to="/chat" className="btn btn-outline-primary">
-                    <i className="bi bi-camera-video-fill me-2"></i> Video Call
-                  </Link>
+                  <button onClick={() => handleBookAppointment(doctor.name)} className="btn btn-video-call w-100">
+                    <i className="bi bi-camera-video-fill me-2"></i> Book Consultation
+                  </button>
                 )}
               </div>
             </div>
           </div>
         ))}
       </div>
+      {showModal && <BookAppointmentModal doctorName={selectedDoctor} onClose={handleCloseModal} />}
     </div>
   );
 };
 
-// Export the component for use in other files
 export default FindDoctorsPage;
