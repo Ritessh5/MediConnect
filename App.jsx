@@ -1,6 +1,8 @@
 // Import necessary React hooks and components
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n'; // Import the i18n configuration
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './Header.jsx';
@@ -13,50 +15,53 @@ import MyProfile from './MyProfile.jsx';
 import SplashScreen from './SplashScreen.jsx';
 import Chat from './Chat.jsx'; 
 import ParticlesBackground from './ParticlesBackground.jsx';
+import MyAppointmentsPage from './MyAppointmentsPage.jsx';
+import MyPrescriptionsPage from './MyPrescriptionsPage.jsx';
+import SettingsPage from './SettingsPage.jsx';
+import AuthPage from './AuthPage.jsx';
 import './App.css';
 
 function App() {
-  // State to control the visibility of the splash screen
   const [showSplash, setShowSplash] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // useEffect hook to hide the splash screen after 2 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
     }, 2000);
 
-    // Cleanup function to clear the timer
     return () => clearTimeout(timer);
   }, []);
 
-  // Conditionally render the SplashScreen component
   if (showSplash) {
     return <SplashScreen />;
   }
 
   return (
-    // Set up the router for navigation
-    <Router>
-      <div className="d-flex flex-column min-vh-100">
-        {/* Render the particles background behind all other content */}
-        <ParticlesBackground />
-        <Header />
-        <main className="flex-grow-1">
-          {/* Define the routes for different pages */}
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/medicine-search" element={<MedicineSearchPage />} />
-            <Route path="/find-doctors" element={<FindDoctorsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/my-profile" element={<MyProfile />} />
-            <Route path="/chat" element={<Chat />} /> 
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <I18nextProvider i18n={i18n}>
+      <Router>
+        <div className="d-flex flex-column min-vh-100">
+          <ParticlesBackground />
+          <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <main className="flex-grow-1">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/medicine-search" element={<MedicineSearchPage />} />
+              <Route path="/find-doctors" element={<FindDoctorsPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/my-profile" element={<MyProfile />} />
+              <Route path="/chat" element={<Chat />} /> 
+              <Route path="/my-appointments" element={<MyAppointmentsPage />} />
+              <Route path="/my-prescriptions" element={<MyPrescriptionsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/auth" element={<AuthPage setIsLoggedIn={setIsLoggedIn} />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </I18nextProvider>
   );
 }
 
-// Export the App component for use in other files
 export default App;

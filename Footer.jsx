@@ -1,11 +1,13 @@
-// Import the React library
+// Import the React library and useTranslation hook
 import React from 'react';
-// Import Link for navigation
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './App.css';
 
 // Define the functional component for the footer
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     // Main footer container with dark background and padding
     <footer className="bg-dark-theme py-3 mt-auto">
@@ -15,20 +17,20 @@ const Footer = () => {
           {/* Column for the company name and tagline */}
           <div className="col-md-4 mb-2 mb-md-0 text-center text-md-start">
             <h5 className="fw-bold text-white mb-0">MediConnect</h5>
-            <p className="text-white-50 small m-0">Smart Health Consultation</p>
+            <p className="text-white-50 small m-0">{t('smart_health_consultation')}</p>
           </div>
 
           {/* Column for the copyright information */}
           <div className="col-md-4 mb-2 mb-md-0 text-center">
             <p className="text-center text-white-50 m-0 small">
               {/* Dynamically get the current year */}
-              &copy; {new Date().getFullYear()} MediConnect. All rights reserved.
+              &copy; {new Date().getFullYear()} MediConnect. {t('all_rights_reserved')}
             </p>
           </div>
 
           {/* Column for the social media icons */}
           <div className="col-md-4 text-center text-md-end">
-            <h6 className="fw-bold text-white m-0">Follow Us</h6>
+            <h6 className="fw-bold text-white m-0">{t('follow_us')}</h6>
             <div className="d-flex justify-content-center justify-content-md-end social-icons mt-1">
               {/* Social media icon links */}
               <a href="#" className="me-2 text-white">

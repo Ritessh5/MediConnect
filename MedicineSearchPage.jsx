@@ -1,51 +1,49 @@
 // Import the React library and necessary hooks
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // Import the main application CSS file
 import './App.css';
 
 // Define the functional component for the medicine search page
 const MedicineSearchPage = () => {
-  // State for the user's search input
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
-  // State to store the search results
   const [searchResults, setSearchResults] = useState([]);
-  // State to manage the loading status
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
 
-  // Function to handle the form submission and trigger the search
   const handleSearch = (e) => {
     e.preventDefault();
     setIsLoading(true);
     setSearchResults([]);
+    setHasSearched(true);
 
-    // Simulate an API call with a setTimeout
     setTimeout(() => {
-      // Hardcoded search logic for demonstration
-      if (searchTerm.toLowerCase() === 'fever') {
+      if (searchTerm.toLowerCase() === t('fever_key').toLowerCase()) {
         setSearchResults([
           {
             name: 'Paracetamol',
             alternativeName: 'Acetaminophen',
-            description: 'Pain reliever and fever reducer, commonly used for mild to moderate pain and fever.',
-            treats: ['Fever', 'Headache', 'Pain'],
-            forms: ['Tablet', 'Syrup', 'Suspension'],
+            description: t('paracetamol_desc'),
+            treats: [t('fever_key'), t('headache_key'), t('pain_key')],
+            forms: [t('tablet'), t('syrup'), t('suspension')],
             isOTC: true,
           },
           {
             name: 'Ibuprofen',
             alternativeName: 'Advil, Motrin',
-            description: 'A nonsteroidal anti-inflammatory drug (NSAID) used for pain, inflammation, and fever.',
-            treats: ['Fever', 'Inflammation', 'Headache'],
-            forms: ['Tablet', 'Gel Cap', 'Liquid'],
+            description: t('ibuprofen_desc'),
+            treats: [t('fever_key'), t('inflammation_key'), t('headache_key')],
+            forms: [t('tablet'), t('gel_cap'), t('liquid')],
             isOTC: true,
           },
           {
             name: 'Aspirin',
             alternativeName: 'Acetylsalicylic Acid',
-            description: 'An NSAID and anti-platelet agent, effective for reducing fever and inflammation.',
-            treats: ['Fever', 'Pain', 'Inflammation'],
-            forms: ['Tablet', 'Chewable Tablet'],
+            description: t('aspirin_desc'),
+            treats: [t('fever_key'), t('pain_key'), t('inflammation_key')],
+            forms: [t('tablet'), t('chewable_tablet')],
             isOTC: true,
           },
         ]);
@@ -57,81 +55,70 @@ const MedicineSearchPage = () => {
   };
 
   return (
-    // Main container for the search page
     <div className="container py-5">
-      {/* Page header and subtitle */}
       <div className="text-center mb-5 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-        <h1 className="fw-bold">Medicine Search Engine</h1>
-        <p className="lead">Enter a disease, symptom, or medicine name to find relevant medications</p>
+        <h1 className="fw-bold">{t('medicine_search_engine')}</h1>
+        <p className="lead">{t('medicine_search_subtitle')}</p>
       </div>
 
-      {/* Safety warning banner */}
       <div className="bg-danger text-white p-4 rounded mb-5 animate-fade-in d-flex flex-column flex-md-row align-items-center justify-content-between" style={{ animationDelay: '0.4s' }}>
         <div className="me-md-4 mb-3 mb-md-0">
-          <h5 className="fw-bold text-white"><i className="bi bi-exclamation-triangle-fill me-2"></i> Important Safety Information</h5>
-          <p className="m-0 small">This tool is for informational purposes only. Always consult with a healthcare professional before taking any medication. Follow prescription instructions and never exceed recommended dosages.</p>
+          <h5 className="fw-bold text-white"><i className="bi bi-exclamation-triangle-fill me-2"></i> {t('important_safety_info')}</h5>
+          <p className="m-0 small">{t('safety_info_message')}</p>
         </div>
         <Link to="/find-doctors" className="btn btn-light text-success fw-bold flex-shrink-0">
-          <i className="bi bi-person-circle me-2"></i> Consult a Doctor
+          <i className="bi bi-person-circle me-2"></i> {t('consult_doctor')}
         </Link>
       </div>
 
-      {/* Search form with input and search button */}
       <form onSubmit={handleSearch} className="mb-5 animate-fade-in" style={{ animationDelay: '0.6s' }}>
         <div className="input-group mx-auto" style={{ maxWidth: '600px' }}>
           <input
             type="text"
             className="form-control"
-            placeholder="Search for medicines (e.g., fever, headache, diabetes)..."
+            placeholder={t('search_placeholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button className="btn btn-success" type="submit">
-            <i className="bi bi-search me-2"></i> Search
+            <i className="bi bi-search me-2"></i> {t('search')}
           </button>
         </div>
       </form>
 
-      {/* Conditional rendering based on loading and search results */}
       {isLoading ? (
-        // Display loading spinner while searching
         <div className="text-center mt-5">
           <div className="spinner-border text-success" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{t('loading')}</span>
           </div>
-          <p className="mt-2 text-muted">Searching for medicines...</p>
+          <p className="mt-2 text-muted">{t('searching_for_medicines')}</p>
         </div>
       ) : searchResults.length > 0 ? (
-        // Display search results if found
         <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
           {searchResults.map((medicine, index) => (
-            // Card to display a single medicine result
             <div 
               key={index} 
               className="card p-4 mb-4 card-animate-in"
-              style={{ animationDelay: `${index * 0.1}s` }} // Staggered animation delay
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="row">
                 <div className="col">
                   <h2 className="d-inline">{medicine.name}</h2>
                   <span className="ms-3 text-muted">{medicine.alternativeName}</span>
-                  {/* Display OTC badge if applicable */}
                   {medicine.isOTC && (
-                    <span className="badge bg-secondary ms-2">OVER THE COUNTER</span>
+                    <span className="badge bg-secondary ms-2">{t('otc')}</span>
                   )}
                   <p className="mt-2">{medicine.description}</p>
-                  {/* Display list of conditions the medicine treats */}
                   <div className="mt-3">
-                    <h5 className="mb-2">Treats:</h5>
+                    <h5 className="mb-2">{t('treats')}:</h5>
                     {medicine.treats.map((treat, idx) => (
                       <span key={idx} className="badge bg-light text-dark border me-2">
                         {treat}
                       </span>
                     ))}
                   </div>
-                  {/* Display list of available forms */}
                   <div className="mt-3">
-                    <h5 className="mb-2">Available Forms:</h5>
+                    <h5 className="mb-2">{t('available_forms')}:</h5>
                     {medicine.forms.map((form, idx) => (
                       <span key={idx} className="badge bg-light text-dark border me-2">
                         {form}
@@ -143,15 +130,13 @@ const MedicineSearchPage = () => {
             </div>
           ))}
         </div>
-      ) : (
-        // Display a message if no medicines are found
-        <div className="text-center mt-5 animate-fade-in" style={{ animationDelay: '0.8s' }}>
-          <p className="text-muted">No medicines found. Please try a different search term.</p>
+      ) : hasSearched ? (
+        <div className="text-center mt-5 animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <p className="text-muted">{t('no_medicines_found')}</p>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
 
-// Export the component for use in other files
 export default MedicineSearchPage;

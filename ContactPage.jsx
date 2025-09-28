@@ -1,37 +1,38 @@
-// Import the React library and the useState, useRef, and useEffect hooks
+// Import the React library and necessary hooks
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './App.css';
 
 // Hardcoded data for FAQ questions and answers
 const faqData = [
   {
-    question: "How do I book an appointment with a doctor?",
-    answer: "You can book an appointment by navigating to the 'Find Doctors' page, selecting a doctor, and clicking the 'Book Consultation' button. You will then be prompted to fill out your patient details and preferred appointment time."
+    questionKey: "faq_q1",
+    answerKey: "faq_a1"
   },
   {
-    question: "How does the medicine search feature work?",
-    answer: "Our medicine search engine allows you to enter symptoms, medical conditions, or specific medicine names. The system will match your query with our comprehensive database and provide relevant medications with detailed information including dosage, side effects, and pricing."
+    questionKey: "faq_q2",
+    answerKey: "faq_a2"
   },
   {
-    question: "Is my personal health information secure?",
-    answer: "Yes, we prioritize the security of your personal and health information. We use industry-standard encryption protocols and comply with all relevant data privacy regulations to ensure your data is protected."
+    questionKey: "faq_q3",
+    answerKey: "faq_a3"
   },
   {
-    question: "What types of consultations are available?",
-    answer: "We offer various consultation types to suit your needs, including video calls, text chats, and a combination of both. You can select your preferred method when booking an appointment."
+    questionKey: "faq_q4",
+    answerKey: "faq_a4"
   },
   {
-    question: "How much do consultations cost?",
-    answer: "Consultation fees vary depending on the doctor's specialization and experience. The price for each doctor is clearly listed on their profile card on the 'Find Doctors' page."
+    questionKey: "faq_q5",
+    answerKey: "faq_a5"
   },
   {
-    question: "Can I get prescriptions through online consultations?",
-    answer: "Yes, if the doctor deems it necessary and appropriate for your condition, they can issue a digital prescription following a consultation. This prescription can be used at your local pharmacy."
+    questionKey: "faq_q6",
+    answerKey: "faq_a6"
   }
 ];
 
 const ContactPage = () => {
-  // State and functions for the contact form (no changes here)
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -42,20 +43,41 @@ const ContactPage = () => {
     message: ''
   });
   const [errors, setErrors] = useState({});
-  const handleChange = (e) => { /* ... (same as before) ... */ };
-  const validateForm = () => { /* ... (same as before) ... */ };
-  const handleSubmit = (e) => { /* ... (same as before) ... */ };
-  
-  // State and functions for the FAQ section
   const [openIndex, setOpenIndex] = useState(null);
+  const faqRef = useRef(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+    let isValid = true;
+    if (!formData.firstName.trim()) { newErrors.firstName = t("first_name_required"); isValid = false; }
+    if (!formData.lastName.trim()) { newErrors.lastName = t("last_name_required"); isValid = false; }
+    if (!formData.email.trim()) { newErrors.email = t("email_required"); isValid = false; }
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) { newErrors.email = t("email_invalid"); isValid = false; }
+    if (formData.subject === 'Select a subject' || !formData.subject) { newErrors.subject = t("subject_required"); isValid = false; }
+    if (!formData.message.trim()) { newErrors.message = t("message_required"); isValid = false; }
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      alert(t("form_submitted_success"));
+      console.log("Form Data:", formData);
+    } else {
+      console.log("Form has validation errors.");
+    }
+  };
+
   const handleToggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-  
-  // Ref to the FAQ container for animation
-  const faqRef = useRef(null);
-  
-  // useEffect to handle the "in view" animation
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -65,18 +87,15 @@ const ContactPage = () => {
           }
         });
       },
-      { threshold: 0.1 } // Trigger when 10% of the element is in view
+      { threshold: 0.1 }
     );
-    
-    // Observe each accordion item
     if (faqRef.current) {
       const items = faqRef.current.querySelectorAll('.accordion-item');
       items.forEach((item, index) => {
-        item.style.transitionDelay = `${index * 0.1}s`; // Stagger the animation
+        item.style.transitionDelay = `${index * 0.1}s`;
         observer.observe(item);
       });
     }
-
     return () => {
       if (faqRef.current) {
         observer.disconnect();
@@ -86,43 +105,28 @@ const ContactPage = () => {
 
   return (
     <div className="container py-5">
-      {/* ... (Contact form and contact info section, same as before) ... */}
       <div className="text-center mb-5">
-        <h1 className="fw-bold">Contact MediConnect</h1>
-        <p className="lead">Get in touch with our support team for any questions or assistance</p>
+        <h1 className="fw-bold">{t('contact_mediconnect')}</h1>
+        <p className="lead">{t('contact_subtitle')}</p>
       </div>
       
       <div className="row g-4">
         <div className="col-md-8">
           <div className="card p-4">
-            <h4 className="mb-4">Send us a Message</h4>
+            <h4 className="mb-4">{t('send_us_a_message')}</h4>
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">First Name <span className="text-danger">*</span></label>
-                    <input 
-                      type="text" 
-                      className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
-                      placeholder="Enter your first name" 
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                    />
+                    <label className="form-label">{t('first_name')} <span className="text-danger">*</span></label>
+                    <input type="text" className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} placeholder={t('enter_first_name')} name="firstName" value={formData.firstName} onChange={handleChange} />
                     {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Last Name <span className="text-danger">*</span></label>
-                    <input 
-                      type="text" 
-                      className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
-                      placeholder="Enter your last name" 
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                    />
+                    <label className="form-label">{t('last_name')} <span className="text-danger">*</span></label>
+                    <input type="text" className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} placeholder={t('enter_last_name')} name="lastName" value={formData.lastName} onChange={handleChange} />
                     {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
                   </div>
                 </div>
@@ -130,105 +134,78 @@ const ContactPage = () => {
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Email Address <span className="text-danger">*</span></label>
-                    <input 
-                      type="email" 
-                      className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                      placeholder="Enter your email address" 
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
+                    <label className="form-label">{t('email_address')} <span className="text-danger">*</span></label>
+                    <input type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder={t('enter_email')} name="email" value={formData.email} onChange={handleChange} />
                     {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      className="form-control" 
-                      placeholder="Enter your phone number" 
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                    />
+                    <label className="form-label">{t('phone_number')}</label>
+                    <input type="tel" className="form-control" placeholder={t('enter_phone')} name="phone" value={formData.phone} onChange={handleChange} />
                   </div>
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label">Subject <span className="text-danger">*</span></label>
-                <select 
-                  className={`form-select ${errors.subject ? 'is-invalid' : ''}`}
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                >
-                  <option value="">Select a subject</option>
-                  <option value="General Inquiry">General Inquiry</option>
-                  <option value="Technical Support">Technical Support</option>
-                  <option value="Billing Question">Billing Question</option>
+                <label className="form-label">{t('subject')} <span className="text-danger">*</span></label>
+                <select className={`form-select ${errors.subject ? 'is-invalid' : ''}`} name="subject" value={formData.subject} onChange={handleChange}>
+                  <option value="">{t('select_a_subject')}</option>
+                  <option value="General Inquiry">{t('general_inquiry')}</option>
+                  <option value="Technical Support">{t('technical_support')}</option>
+                  <option value="Billing Question">{t('billing_question')}</option>
                 </select>
                 {errors.subject && <div className="invalid-feedback">{errors.subject}</div>}
               </div>
               <div className="mb-3">
-                <label className="form-label">Priority Level</label>
+                <label className="form-label">{t('priority_level')}</label>
                 <div>
                   <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="priority" id="low" value="low" checked={formData.priority === 'low'} onChange={handleChange} />
-                    <label className="form-check-label" htmlFor="low">LOW</label>
+                    <label className="form-check-label" htmlFor="low">{t('low')}</label>
                   </div>
                   <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="priority" id="medium" value="medium" checked={formData.priority === 'medium'} onChange={handleChange} />
-                    <label className="form-check-label" htmlFor="medium">MEDIUM</label>
+                    <label className="form-check-label" htmlFor="medium">{t('medium')}</label>
                   </div>
                   <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="priority" id="high" value="high" checked={formData.priority === 'high'} onChange={handleChange} />
-                    <label className="form-check-label" htmlFor="high">HIGH</label>
+                    <label className="form-check-label" htmlFor="high">{t('high')}</label>
                   </div>
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label">Message <span className="text-danger">*</span></label>
-                <textarea 
-                  className={`form-control ${errors.message ? 'is-invalid' : ''}`}
-                  rows="4" 
-                  placeholder="Type your message here..." 
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                ></textarea>
+                <label className="form-label">{t('message')} <span className="text-danger">*</span></label>
+                <textarea className={`form-control ${errors.message ? 'is-invalid' : ''}`} rows="4" placeholder={t('type_your_message')} name="message" value={formData.message} onChange={handleChange}></textarea>
                 {errors.message && <div className="invalid-feedback">{errors.message}</div>}
               </div>
-              <button type="submit" className="btn btn-success w-100">Send Message</button>
+              <button type="submit" className="btn btn-success w-100">{t('send_message')}</button>
             </form>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card p-4 h-100 bg-light">
-            <h4 className="mb-4">Contact Information</h4>
+            <h4 className="mb-4">{t('contact_information')}</h4>
             <ul className="list-unstyled">
               <li className="mb-3">
-                <h6 className="fw-bold">Phone Support</h6>
-                <p>1-800-MEDICONNECT<br/>Available 24/7</p>
+                <h6 className="fw-bold">{t('phone_support')}</h6>
+                <p>{t('phone_number_value')}<br/>{t('phone_support_hours')}</p>
               </li>
               <li className="mb-3">
-                <h6 className="fw-bold">Email Support</h6>
-                <p>support@mediconnect.com<br/>Response within 24 hours</p>
+                <h6 className="fw-bold">{t('email_support')}</h6>
+                <p>{t('email_address_value')}<br/>{t('email_response_time')}</p>
               </li>
               <li className="mb-3">
-                <h6 className="fw-bold">Live Chat</h6>
-                <p>Available on website<br/>Mon-Fri, 9 AM - 6 PM EST</p>
+                <h6 className="fw-bold">{t('live_chat')}</h6>
+                <p>{t('live_chat_location')}<br/>{t('live_chat_hours')}</p>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      {/* FAQ section with animation */}
       <div className="mt-5 pt-5 text-center animate-fade-in">
-        <h2 className="fw-bold">Frequently Asked Questions</h2>
-        <p className="lead">Find answers to common questions about MediConnect</p>
+        <h2 className="fw-bold">{t('faq_title')}</h2>
+        <p className="lead">{t('faq_subtitle')}</p>
       </div>
       
       <div className="accordion mx-auto" ref={faqRef} style={{ maxWidth: '800px' }}>
@@ -240,12 +217,12 @@ const ContactPage = () => {
                 type="button" 
                 onClick={() => handleToggle(index)}
               >
-                {item.question}
+                {t(item.questionKey)}
               </button>
             </h2>
             <div className={`accordion-collapse collapse ${openIndex === index ? 'show' : ''}`}>
               <div className="accordion-body">
-                {item.answer}
+                {t(item.answerKey)}
               </div>
             </div>
           </div>
@@ -255,5 +232,4 @@ const ContactPage = () => {
   );
 };
 
-// Export the component for use in other files
 export default ContactPage;

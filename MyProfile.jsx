@@ -1,78 +1,71 @@
 // Import the React library
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './App.css';
 
-// Define the functional component for the user's profile page
 const MyProfile = () => {
+  const { t } = useTranslation();
+
   return (
-    // Main container for the profile page with padding
     <div className="container py-5">
-      {/* Page header with a title and subtitle */}
       <div className="text-center mb-5">
-        <h1 className="fw-bold">My Profile</h1>
-        <p className="lead">View and manage your personal and health information</p>
+        <h1 className="fw-bold">{t('my_profile')}</h1>
+        <p className="lead">{t('my_profile_subtitle')}</p>
       </div>
       
       <div className="row justify-content-center">
         <div className="col-md-8">
-          {/* Card to contain all profile information */}
           <div className="card p-4">
-            {/* Section for the user's profile picture and name */}
             <div className="text-center mb-4">
               <div className="rounded-circle bg-light d-inline-flex align-items-center justify-content-center" style={{ width: '120px', height: '120px' }}>
                 <i className="bi bi-person-fill" style={{ fontSize: '4rem', color: '#6c757d' }}></i>
               </div>
               <h4 className="mt-3">John Doe</h4>
-              <p className="text-muted">Joined on: January 1, 2025</p>
+              <p className="text-muted">{t('joined_on')}: January 1, 2025</p>
             </div>
 
-            {/* Section for personal details */}
             <div className="mb-4">
-              <h5 className="fw-bold text-success mb-3">Personal Details</h5>
+              <h5 className="fw-bold text-success mb-3">{t('personal_details')}</h5>
               <div className="row">
-                {/* Display various personal information fields */}
                 <div className="col-md-6 mb-3">
-                  <label className="form-label fw-bold">Email Address</label>
+                  <label className="form-label fw-bold">{t('email_address')}</label>
                   <p>johndoe@example.com</p>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <label className="form-label fw-bold">Phone Number</label>
+                  <label className="form-label fw-bold">{t('phone_number')}</label>
                   <p>+91 6523181630</p>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <label className="form-label fw-bold">Gender</label>
-                  <p>Male</p>
+                  <label className="form-label fw-bold">{t('gender')}</label>
+                  <p>{t('male')}</p>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <label className="form-label fw-bold">Date of Birth</label>
+                  <label className="form-label fw-bold">{t('date_of_birth')}</label>
                   <p>10/26/1990</p>
                 </div>
                 <div className="col-md-12 mb-3">
-                  <label className="form-label fw-bold">Address</label>
+                  <label className="form-label fw-bold">{t('address')}</label>
                   <p>Mumbai, Maharashtra-400003</p>
                 </div>
               </div>
             </div>
 
-            {/* Section for medical history */}
             <div className="mb-4">
-              <h5 className="fw-bold text-success mb-3">Medical History</h5>
+              <h5 className="fw-bold text-success mb-3">{t('medical_history')}</h5>
               <ul className="list-group list-group-flush">
-                {/* List items for medical information */}
                 <li className="list-group-item d-flex justify-content-between align-items-center">
-                  Allergies
-                  <span className="text-muted">None</span>
+                  {t('allergies')}
+                  <span className="text-muted">{t('none')}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center">
-                  Current Medications
-                  <span className="text-muted">Metformin</span>
+                  {t('current_medications')}
+                  <span className="text-muted">{t('metformin')}</span>
                 </li>
               </ul>
             </div>
 
-            {/* Button to edit the profile */}
             <div className="text-end mt-4">
-              <button className="btn btn-outline-success">Edit Profile</button>
+              <button className="btn btn-outline-success">{t('edit_profile')}</button>
             </div>
           </div>
         </div>
@@ -81,5 +74,4 @@ const MyProfile = () => {
   );
 };
 
-// Export the component for use in other files
 export default MyProfile;
