@@ -1,6 +1,6 @@
 // Import the React library and necessary hooks
 import React, { useState } from 'react';
-import './App.css';
+import '../../pages/App.css';
 
 // Define the functional component for the appointment booking modal
 const BookAppointmentModal = ({ doctorName, onClose }) => {

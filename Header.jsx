@@ -1,24 +1,38 @@
-// Import the React library
+// File: src/frontend/component/common/Header.jsx
+
 import React from 'react';
-// Import Link for navigation without page reload
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import './App.css';
-import logo from './MediConnectLogo.png';
+import { Link, useNavigate } from 'react-router-dom';
+// CORRECTED PATH: Up two levels (from common -> component -> frontend), then down into 'pages'
+import '../../pages/App.css'; 
+import logo from './MediConnectLogo.png'; 
+
+// Define a simple placeholder function for the 't' calls (as translations are removed)
+const t = (key) => key.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
 // Define the functional component for the header
-const Header = ({ isLoggedIn }) => {
-  const { t, i18n } = useTranslation();
+const Header = ({ isLoggedIn, setIsLoggedIn }) => {
+  const navigate = useNavigate();
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+  // --- NEW LOGOUT HANDLER FUNCTION ---
+  const handleLogout = () => {
+    // In a real app, you would call your API logout function and clear localStorage here
+    
+    // Clear session data (MIMICING BACKEND LOGOUT/TOKEN CLEARANCE)
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    
+    // Update the state to logged out
+    setIsLoggedIn(false); 
+
+    // Redirect the user to the homepage
+    navigate('/'); 
   };
+  // ------------------------------------
 
   return (
-    // Main navigation bar with Bootstrap classes for styling and a shadow effect
     <nav className="navbar navbar-expand-lg bg-white py-3 shadow-sm">
       <div className="container">
-        {/* Brand logo and name linking to the home page */}
         <Link className="navbar-brand d-flex align-items-center" to="/">
           <img
             src={logo}
@@ -29,15 +43,11 @@ const Header = ({ isLoggedIn }) => {
           />
           <span className="fw-bold text-success">MediConnect</span>
         </Link>
-        {/* Toggler button for responsive mobile navigation */}
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
-        {/* Container for collapsible navigation links */}
         <div className="collapse navbar-collapse" id="navbarNav">
-          {/* Navigation links aligned to the right */}
           <div className="navbar-nav ms-auto me-4">
-            {/* Nav links with icons */}
             <Link className="nav-link me-3" to="/">
               <i className="bi bi-house-door-fill me-2"></i>{t('home')}
             </Link>
@@ -55,6 +65,7 @@ const Header = ({ isLoggedIn }) => {
           <div className="d-flex align-items-center">
             {isLoggedIn ? (
               <div className="dropdown">
+                {/* Profile Dropdown Button */}
                 <button
                   className="nav-link dropdown-toggle"
                   type="button"
@@ -64,35 +75,27 @@ const Header = ({ isLoggedIn }) => {
                 >
                   <i className="bi bi-person-circle me-2"></i>{t('profile')}
                 </button>
+                {/* Dropdown Menu */}
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                   <li><Link className="dropdown-item" to="/my-profile">My Profile</Link></li>
                   <li><Link className="dropdown-item" to="/my-appointments">My Appointments</Link></li>
                   <li><Link className="dropdown-item" to="/my-prescriptions">My Prescriptions</Link></li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
-                  <li><Link className="dropdown-item" to="/logout">Log Out</Link></li>
+                  {/* --- LOGOUT BUTTON IMPLEMENTATION --- */}
+                  <li>
+                    <button 
+                      className="dropdown-item" 
+                      onClick={handleLogout}
+                    >
+                      Log Out
+                    </button>
+                  </li>
+                  {/* --- END LOGOUT BUTTON --- */}
                 </ul>
               </div>
             ) : (
               <Link to="/auth" className="btn btn-success me-3">{t('login')}</Link>
             )}
-
-            {/* Language Switcher */}
-            <div className="dropdown">
-              <button
-                className="btn btn-outline-secondary dropdown-toggle"
-                type="button"
-                id="languageDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {i18n.language.toUpperCase()}
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
-                <li><button className="dropdown-item" onClick={() => changeLanguage('en')}>English</button></li>
-                <li><button className="dropdown-item" onClick={() => changeLanguage('hi')}>Hindi</button></li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
@@ -100,5 +103,4 @@ const Header = ({ isLoggedIn }) => {
   );
 };
 
-// Export the component for use in other files
 export default Header;

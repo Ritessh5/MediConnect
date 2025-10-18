@@ -1,7 +1,7 @@
 // Import the React library
 import React from 'react';
 import logo from './Gemini_Logo.png';
-import './App.css';
+import '../../pages/App.css';
 
 // Define the functional component for the splash screen
 const SplashScreen = () => {

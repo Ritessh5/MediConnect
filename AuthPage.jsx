@@ -1,8 +1,13 @@
+// File: src/frontend/pages/AuthPage.jsx (Modified)
+
 // Import the React library and hooks
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import LoginPage from './LoginPage.jsx';
-import SignupPage from './SignupPage.jsx';
+// --- CORRECTED PATHS ---
+import LoginPage from '../component/auth/LoginPage.jsx'; // Corrected path
+import SignupPage from '../component/auth/SignupPage.jsx'; // Corrected path
+// --- 
+
 import './App.css';
 
 const AuthPage = ({ setIsLoggedIn }) => {

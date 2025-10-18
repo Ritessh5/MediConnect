@@ -1,24 +1,35 @@
-// Import the React library and necessary hooks
+// File: src/frontend/component/auth/LoginPage.jsx
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './App.css';
+// CORRECTED PATH: Up two levels (from auth -> component -> frontend), then down into 'services'
+import { authAPI } from '../../services/api'; 
+// CORRECTED PATH: Up two levels (from auth -> component -> frontend), then down into 'pages'
+import '../../pages/App.css'; 
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    // Hardcoded authentication for demonstration
-    if (username === 'Ritessh' && password === 'Ritessh5') {
-      onLogin(true); // Call the onLogin function to set isLoggedIn to true
-      navigate('/'); // Redirect to the homepage on successful login
-    } else {
-      setError('Invalid username or password.');
+    try {
+      const response = await authAPI.login({ username, password });
+      
+      if (response.status === 'success') {
+        onLogin(true); // Update isLoggedIn state in App.jsx
+        navigate('/'); // Redirect to homepage
+      }
+    } catch (err) {
+      setError(err.message || 'Invalid username or password.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,6 +45,7 @@ const LoginPage = ({ onLogin }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
         <div className="mb-3">
@@ -44,15 +56,22 @@ const LoginPage = ({ onLogin }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
-        {error && <div className="alert alert-danger p-2 text-center">{error}</div>}
+        {error && (
+          <div className="alert alert-danger p-2 text-center">{error}</div>
+        )}
         <div className="d-grid gap-2">
-          <button type="submit" className="btn btn-success">Log In</button>
+          <button type="submit" className="btn btn-success" disabled={loading}>
+            {loading ? 'Logging in...' : 'Log In'}
+          </button>
         </div>
       </form>
       <div className="text-center mt-3">
-        <p className="mb-0">New User? <Link to="/auth?mode=signup">Sign up</Link></p>
+        <p className="mb-0">
+          New User? <Link to="/auth?mode=signup">Sign up</Link>
+        </p>
       </div>
     </div>
   );

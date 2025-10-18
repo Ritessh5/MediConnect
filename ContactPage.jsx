@@ -1,38 +1,41 @@
+// File: src/frontend/pages/ContactPage.jsx (Modified to remove i18n)
+
 // Import the React library and necessary hooks
 import React, { useState, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next'; // <-- REMOVED
 import './App.css';
 
-// Hardcoded data for FAQ questions and answers
+// Replaced key-based FAQ data with static questions and answers
 const faqData = [
   {
-    questionKey: "faq_q1",
-    answerKey: "faq_a1"
+    question: "How do I book an appointment?",
+    answer: "You can book an appointment by navigating to the 'Find Doctors' page, selecting a doctor, and clicking the 'Book Consultation' button to open the scheduling modal."
   },
   {
-    questionKey: "faq_q2",
-    answerKey: "faq_a2"
+    question: "What consultation types are available?",
+    answer: "We offer consultations via Video Call, Text Chat, or a combination of both, depending on the doctor's availability and your preference."
   },
   {
-    questionKey: "faq_q3",
-    answerKey: "faq_a3"
+    question: "Is my personal information secure?",
+    answer: "Yes, we use industry-standard encryption and security protocols to ensure all your personal and health information is kept private and secure."
   },
   {
-    questionKey: "faq_q4",
-    answerKey: "faq_a4"
+    question: "Can I search for medicines?",
+    answer: "Yes, use the 'Medicine Search' feature in the navigation bar to find detailed information on various medicines."
   },
   {
-    questionKey: "faq_q5",
-    answerKey: "faq_a5"
+    question: "How do I view my prescriptions?",
+    answer: "Prescriptions are available on your 'My Prescriptions' page once they have been issued by a doctor following a consultation."
   },
   {
-    questionKey: "faq_q6",
-    answerKey: "faq_a6"
+    question: "What should I do if I have a technical issue?",
+    answer: "Please fill out the contact form below and select 'Technical Support' as the subject, or call our support line during business hours."
   }
 ];
 
 const ContactPage = () => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation(); // <-- REMOVED
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -54,12 +57,13 @@ const ContactPage = () => {
   const validateForm = () => {
     let newErrors = {};
     let isValid = true;
-    if (!formData.firstName.trim()) { newErrors.firstName = t("first_name_required"); isValid = false; }
-    if (!formData.lastName.trim()) { newErrors.lastName = t("last_name_required"); isValid = false; }
-    if (!formData.email.trim()) { newErrors.email = t("email_required"); isValid = false; }
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) { newErrors.email = t("email_invalid"); isValid = false; }
-    if (formData.subject === 'Select a subject' || !formData.subject) { newErrors.subject = t("subject_required"); isValid = false; }
-    if (!formData.message.trim()) { newErrors.message = t("message_required"); isValid = false; }
+    // NOTE: Validation messages replaced with static strings
+    if (!formData.firstName.trim()) { newErrors.firstName = "First name is required."; isValid = false; }
+    if (!formData.lastName.trim()) { newErrors.lastName = "Last name is required."; isValid = false; }
+    if (!formData.email.trim()) { newErrors.email = "Email is required."; isValid = false; }
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) { newErrors.email = "Email address is invalid."; isValid = false; }
+    if (formData.subject === 'Select a subject' || !formData.subject) { newErrors.subject = "Subject is required."; isValid = false; }
+    if (!formData.message.trim()) { newErrors.message = "Message is required."; isValid = false; }
     setErrors(newErrors);
     return isValid;
   };
@@ -67,7 +71,7 @@ const ContactPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      alert(t("form_submitted_success"));
+      alert("Form submitted successfully!"); // NOTE: Alert message is static
       console.log("Form Data:", formData);
     } else {
       console.log("Form has validation errors.");
@@ -106,27 +110,27 @@ const ContactPage = () => {
   return (
     <div className="container py-5">
       <div className="text-center mb-5">
-        <h1 className="fw-bold">{t('contact_mediconnect')}</h1>
-        <p className="lead">{t('contact_subtitle')}</p>
+        <h1 className="fw-bold">Contact MediConnect</h1> {/* Replaced t('contact_mediconnect') */}
+        <p className="lead">We're here to help you with any questions or issues.</p> {/* Replaced t('contact_subtitle') */}
       </div>
       
       <div className="row g-4">
         <div className="col-md-8">
           <div className="card p-4">
-            <h4 className="mb-4">{t('send_us_a_message')}</h4>
+            <h4 className="mb-4">Send Us a Message</h4> {/* Replaced t('send_us_a_message') */}
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">{t('first_name')} <span className="text-danger">*</span></label>
-                    <input type="text" className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} placeholder={t('enter_first_name')} name="firstName" value={formData.firstName} onChange={handleChange} />
+                    <label className="form-label">First Name <span className="text-danger">*</span></label> {/* Replaced t('first_name') */}
+                    <input type="text" className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} placeholder="Enter your first name" name="firstName" value={formData.firstName} onChange={handleChange} /> {/* Replaced t('enter_first_name') */}
                     {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">{t('last_name')} <span className="text-danger">*</span></label>
-                    <input type="text" className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} placeholder={t('enter_last_name')} name="lastName" value={formData.lastName} onChange={handleChange} />
+                    <label className="form-label">Last Name <span className="text-danger">*</span></label> {/* Replaced t('last_name') */}
+                    <input type="text" className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} placeholder="Enter your last name" name="lastName" value={formData.lastName} onChange={handleChange} /> {/* Replaced t('enter_last_name') */}
                     {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
                   </div>
                 </div>
@@ -134,69 +138,69 @@ const ContactPage = () => {
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">{t('email_address')} <span className="text-danger">*</span></label>
-                    <input type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder={t('enter_email')} name="email" value={formData.email} onChange={handleChange} />
+                    <label className="form-label">Email Address <span className="text-danger">*</span></label> {/* Replaced t('email_address') */}
+                    <input type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} placeholder="Enter your email" name="email" value={formData.email} onChange={handleChange} /> {/* Replaced t('enter_email') */}
                     {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">{t('phone_number')}</label>
-                    <input type="tel" className="form-control" placeholder={t('enter_phone')} name="phone" value={formData.phone} onChange={handleChange} />
+                    <label className="form-label">Phone Number</label> {/* Replaced t('phone_number') */}
+                    <input type="tel" className="form-control" placeholder="Enter your phone" name="phone" value={formData.phone} onChange={handleChange} /> {/* Replaced t('enter_phone') */}
                   </div>
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label">{t('subject')} <span className="text-danger">*</span></label>
+                <label className="form-label">Subject <span className="text-danger">*</span></label> {/* Replaced t('subject') */}
                 <select className={`form-select ${errors.subject ? 'is-invalid' : ''}`} name="subject" value={formData.subject} onChange={handleChange}>
-                  <option value="">{t('select_a_subject')}</option>
-                  <option value="General Inquiry">{t('general_inquiry')}</option>
-                  <option value="Technical Support">{t('technical_support')}</option>
-                  <option value="Billing Question">{t('billing_question')}</option>
+                  <option value="">Select a subject</option> {/* Replaced t('select_a_subject') */}
+                  <option value="General Inquiry">General Inquiry</option> {/* Replaced t('general_inquiry') */}
+                  <option value="Technical Support">Technical Support</option> {/* Replaced t('technical_support') */}
+                  <option value="Billing Question">Billing Question</option> {/* Replaced t('billing_question') */}
                 </select>
                 {errors.subject && <div className="invalid-feedback">{errors.subject}</div>}
               </div>
               <div className="mb-3">
-                <label className="form-label">{t('priority_level')}</label>
+                <label className="form-label">Priority Level</label> {/* Replaced t('priority_level') */}
                 <div>
                   <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="priority" id="low" value="low" checked={formData.priority === 'low'} onChange={handleChange} />
-                    <label className="form-check-label" htmlFor="low">{t('low')}</label>
+                    <label className="form-check-label" htmlFor="low">Low</label> {/* Replaced t('low') */}
                   </div>
                   <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="priority" id="medium" value="medium" checked={formData.priority === 'medium'} onChange={handleChange} />
-                    <label className="form-check-label" htmlFor="medium">{t('medium')}</label>
+                    <label className="form-check-label" htmlFor="medium">Medium</label> {/* Replaced t('medium') */}
                   </div>
                   <div className="form-check form-check-inline">
                     <input className="form-check-input" type="radio" name="priority" id="high" value="high" checked={formData.priority === 'high'} onChange={handleChange} />
-                    <label className="form-check-label" htmlFor="high">{t('high')}</label>
+                    <label className="form-check-label" htmlFor="high">High</label> {/* Replaced t('high') */}
                   </div>
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label">{t('message')} <span className="text-danger">*</span></label>
-                <textarea className={`form-control ${errors.message ? 'is-invalid' : ''}`} rows="4" placeholder={t('type_your_message')} name="message" value={formData.message} onChange={handleChange}></textarea>
+                <label className="form-label">Message <span className="text-danger">*</span></label> {/* Replaced t('message') */}
+                <textarea className={`form-control ${errors.message ? 'is-invalid' : ''}`} rows="4" placeholder="Type your message here..." name="message" value={formData.message} onChange={handleChange}></textarea> {/* Replaced t('type_your_message') */}
                 {errors.message && <div className="invalid-feedback">{errors.message}</div>}
               </div>
-              <button type="submit" className="btn btn-success w-100">{t('send_message')}</button>
+              <button type="submit" className="btn btn-success w-100">Send Message</button> {/* Replaced t('send_message') */}
             </form>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card p-4 h-100 bg-light">
-            <h4 className="mb-4">{t('contact_information')}</h4>
+            <h4 className="mb-4">Contact Information</h4> {/* Replaced t('contact_information') */}
             <ul className="list-unstyled">
               <li className="mb-3">
-                <h6 className="fw-bold">{t('phone_support')}</h6>
-                <p>{t('phone_number_value')}<br/>{t('phone_support_hours')}</p>
+                <h6 className="fw-bold">Phone Support</h6> {/* Replaced t('phone_support') */}
+                <p>+91 98765 43210<br/>Mon - Fri, 9:00 AM - 5:00 PM IST</p> {/* Replaced t('phone_number_value') and t('phone_support_hours') */}
               </li>
               <li className="mb-3">
-                <h6 className="fw-bold">{t('email_support')}</h6>
-                <p>{t('email_address_value')}<br/>{t('email_response_time')}</p>
+                <h6 className="fw-bold">Email Support</h6> {/* Replaced t('email_support') */}
+                <p>support@mediconnect.com<br/>We typically respond within 24 hours.</p> {/* Replaced t('email_address_value') and t('email_response_time') */}
               </li>
               <li className="mb-3">
-                <h6 className="fw-bold">{t('live_chat')}</h6>
-                <p>{t('live_chat_location')}<br/>{t('live_chat_hours')}</p>
+                <h6 className="fw-bold">Live Chat</h6> {/* Replaced t('live_chat') */}
+                <p>Chat is available on the homepage<br/>Mon - Sat, 10:00 AM - 8:00 PM IST</p> {/* Replaced t('live_chat_location') and t('live_chat_hours') */}
               </li>
             </ul>
           </div>
@@ -204,8 +208,8 @@ const ContactPage = () => {
       </div>
 
       <div className="mt-5 pt-5 text-center animate-fade-in">
-        <h2 className="fw-bold">{t('faq_title')}</h2>
-        <p className="lead">{t('faq_subtitle')}</p>
+        <h2 className="fw-bold">Frequently Asked Questions (FAQ)</h2> {/* Replaced t('faq_title') */}
+        <p className="lead">Find quick answers to common questions.</p> {/* Replaced t('faq_subtitle') */}
       </div>
       
       <div className="accordion mx-auto" ref={faqRef} style={{ maxWidth: '800px' }}>
@@ -217,12 +221,12 @@ const ContactPage = () => {
                 type="button" 
                 onClick={() => handleToggle(index)}
               >
-                {t(item.questionKey)}
+                {item.question} {/* Replaced t(item.questionKey) */}
               </button>
             </h2>
             <div className={`accordion-collapse collapse ${openIndex === index ? 'show' : ''}`}>
               <div className="accordion-body">
-                {t(item.answerKey)}
+                {item.answer} {/* Replaced t(item.answerKey) */}
               </div>
             </div>
           </div>
