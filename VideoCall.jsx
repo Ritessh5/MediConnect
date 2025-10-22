@@ -2,167 +2,302 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import './App.css';
 
+// Define the public domain once (no magic cookie required)
+const JITSI_PUBLIC_DOMAIN = 'meet.jit.si'; 
+
 const VideoCall = () => {
   const [searchParams] = useSearchParams();
   const appointmentId = searchParams.get('appointmentId');
-  const doctorName = searchParams.get('doctorName');
+  const doctorName = searchParams.get('doctorName') || 'Doctor';
   const navigate = useNavigate();
   const jitsiContainerRef = useRef(null);
   const jitsiApiRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
     if (!appointmentId) {
-      setError('Invalid video call link');
-      setTimeout(() => navigate('/'), 2000);
+      setError('Invalid video call link. Missing appointment ID.');
+      setLoading(false);
       return;
     }
 
-    // Cleanup any existing Jitsi instance
-    if (jitsiApiRef.current) {
-      jitsiApiRef.current.dispose();
-      jitsiApiRef.current = null;
+    if (!jitsiApiRef.current) {
+        loadJitsiScript();
     }
-
-    // Load and initialize Jitsi
-    loadJitsi();
-
-    return () => {
-      // Cleanup on unmount
-      if (jitsiApiRef.current) {
-        try {
-          jitsiApiRef.current.dispose();
-        } catch (e) {
-          console.error('Error disposing Jitsi:', e);
-        }
-        jitsiApiRef.current = null;
-      }
-    };
-  }, [appointmentId]);
-
-  const loadJitsi = () => {
-    // Check if script already exists
-    const existingScript = document.getElementById('jitsi-script');
     
-    if (existingScript) {
-      // Script already loaded, just initialize
-      if (window.JitsiMeetExternalAPI) {
-        initializeJitsi();
-      }
+    return () => {
+      cleanupJitsi();
+    };
+    
+  }, [appointmentId, navigate]);
+
+
+  useEffect(() => {
+    if (scriptLoaded && !jitsiApiRef.current) {
+      const timeout = setTimeout(() => {
+        if (window.JitsiMeetExternalAPI) {
+          initializeJitsi();
+        } else {
+          setError('Jitsi API not available after script load timeout.');
+          setLoading(false);
+        }
+      }, 500);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [scriptLoaded]);
+
+  const loadJitsiScript = () => {
+    const existingScript = document.getElementById('jitsi-meet-script');
+    
+    if (existingScript && window.JitsiMeetExternalAPI) {
+      console.log('✅ Jitsi script already loaded');
+      setScriptLoaded(true);
       return;
     }
 
-    // Load script for first time
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    console.log('📥 Loading Jitsi Meet script...');
     const script = document.createElement('script');
-    script.id = 'jitsi-script';
-    script.src = 'https://meet.jit.si/external_api.js';
+    script.id = 'jitsi-meet-script';
+    // FIX 1: Use the public Jitsi script URL
+    script.src = `https://${JITSI_PUBLIC_DOMAIN}/external_api.js`; 
     script.async = true;
+    
     script.onload = () => {
-      console.log('✅ Jitsi script loaded');
-      initializeJitsi();
+      console.log('✅ Jitsi script loaded successfully');
+      setScriptLoaded(true); 
     };
-    script.onerror = () => {
-      setError('Failed to load video call. Please check your internet connection.');
+    
+    script.onerror = (e) => {
+      console.error('❌ Failed to load Jitsi script:', e);
+      setError('Failed to load video call library. Please check your internet connection and try again.');
       setLoading(false);
     };
+    
     document.body.appendChild(script);
   };
 
+  const cleanupJitsi = () => {
+    if (jitsiApiRef.current) {
+      try {
+        console.log('🧹 Cleaning up Jitsi instance');
+        jitsiApiRef.current.dispose();
+      } catch (e) {
+        console.error('Error disposing Jitsi:', e);
+      }
+      jitsiApiRef.current = null;
+    }
+  };
+
+  // AGGRESSIVE FIX: Helper function to safely extract the error message from the Jitsi object
+  const getErrorMessage = (errorEvent) => {
+    if (typeof errorEvent === 'string') {
+      return errorEvent;
+    }
+    if (errorEvent && typeof errorEvent === 'object') {
+      // Attempt to extract the readable message
+      const readableMessage = errorEvent.message || errorEvent.error || errorEvent.name;
+      
+      if (readableMessage) {
+          return readableMessage;
+      }
+      
+      // AGGRESSIVE FALLBACK: Stringify the entire object to expose all details
+      try {
+          return JSON.stringify(errorEvent, null, 2);
+      } catch (e) {
+          // If stringification fails (circular reference), return generic message
+          return 'An unparseable error object occurred.';
+      }
+    }
+    return 'An unknown error occurred during the video call.';
+  };
+
   const initializeJitsi = () => {
-    if (!window.JitsiMeetExternalAPI) {
-      setError('Jitsi API not available');
+    if (jitsiApiRef.current) {
+      console.log('⚠️ Jitsi already initialized. Skipping redundant call.');
+      return;
+    }
+
+    if (!window.JitsiMeetExternalAPI || !jitsiContainerRef.current) {
+      console.error('❌ JitsiMeetExternalAPI or container not available');
+      setError('Video call service or container not ready.');
       setLoading(false);
       return;
     }
 
     try {
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      const roomName = `MediConnect_Appointment_${appointmentId}`;
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      // Define the simple room name
+      const roomName = `MediConnect_Appointment_${appointmentId}`; 
+      
+      console.log('🎥 Initializing Jitsi with room:', roomName);
+      console.log('👤 User:', currentUser.username || 'Guest');
+
+      // Use the public domain
+      const domain = JITSI_PUBLIC_DOMAIN; 
       
       const options = {
-        roomName: roomName,
+        // Use the simple room name directly
+        roomName: roomName, 
         width: '100%',
         height: '100%',
         parentNode: jitsiContainerRef.current,
+        
+        // --- CONFIG OVERWRITE (SAFE SET) ---
         configOverwrite: {
           startWithAudioMuted: false,
           startWithVideoMuted: false,
-          prejoinPageEnabled: false, // Skip lobby
-          enableWelcomePage: false,
+          prejoinPageEnabled: false, 
           disableDeepLinking: true,
+          enableWelcomePage: false,
+          enableClosePage: false,
+          defaultLanguage: 'en',
+          doNotStoreRoom: true,
         },
+        
+        // --- INTERFACE CONFIG OVERWRITE (SAFE SET) ---
         interfaceConfigOverwrite: {
           TOOLBAR_BUTTONS: [
             'microphone',
             'camera',
-            'desktop',
+            'desktop', 
             'fullscreen',
+            'fodeviceselection',
             'hangup',
             'chat',
             'raisehand',
+            'videoquality',
+            'tileview',
             'settings',
+            'mute-everyone',
           ],
+          SETTINGS_SECTIONS: ['devices', 'language'],
           SHOW_JITSI_WATERMARK: false,
-          SHOW_WATERMARK_FOR_GUESTS: false,
-          SHOW_BRAND_WATERMARK: false,
           DEFAULT_BACKGROUND: '#474747',
-          DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+          DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
+          HIDE_INVITE_MORE_HEADER: true,
+          MOBILE_APP_PROMO: false,
         },
         userInfo: {
-          displayName: currentUser?.username || 'Guest',
+          displayName: currentUser?.username || 'User',
           email: currentUser?.email || ''
         }
       };
 
-      console.log('🎥 Initializing Jitsi with room:', roomName);
-      
-      jitsiApiRef.current = new window.JitsiMeetExternalAPI('meet.jit.si', options);
+      jitsiApiRef.current = new window.JitsiMeetExternalAPI(domain, options);
 
       // Event listeners
-      jitsiApiRef.current.on('videoConferenceJoined', () => {
-        console.log('✅ Joined video conference');
+      jitsiApiRef.current.addEventListener('videoConferenceJoined', (participant) => {
+        console.log('✅ Joined video conference:', participant);
+        setLoading(false);
+        setError(null);
+      });
+
+      jitsiApiRef.current.addEventListener('videoConferenceLeft', () => {
+        console.log('👋 Left video conference');
+        handleEndCall();
+      });
+
+      jitsiApiRef.current.addEventListener('readyToClose', () => {
+        console.log('🚪 Ready to close');
+        handleEndCall();
+      });
+
+      // FIX: Use the new helper function to display a readable error
+      jitsiApiRef.current.addEventListener('errorOccurred', (errorEvent) => {
+        const readableError = getErrorMessage(errorEvent);
+        console.error('❌ Jitsi error:', errorEvent);
+        
+        setError(`Video call failed: ${readableError}`);
         setLoading(false);
       });
 
-      jitsiApiRef.current.on('readyToClose', () => {
-        console.log('👋 Video call ended');
-        navigate('/my-appointments');
+      jitsiApiRef.current.addEventListener('participantJoined', (participant) => {
+        console.log('👤 Participant joined:', participant.displayName);
       });
 
-      jitsiApiRef.current.on('errorOccurred', (error) => {
-        console.error('❌ Jitsi error:', error);
-        setError('An error occurred during the video call');
+      jitsiApiRef.current.addEventListener('participantLeft', (participant) => {
+        console.log('👋 Participant left:', participant.displayName);
       });
 
     } catch (err) {
       console.error('❌ Failed to initialize Jitsi:', err);
-      setError('Failed to start video call. Please try again.');
+      setError(`Failed to start video call: ${err.message || 'Unknown error'}. Please try again.`);
       setLoading(false);
     }
   };
 
   const handleEndCall = () => {
-    if (jitsiApiRef.current) {
-      try {
-        jitsiApiRef.current.executeCommand('hangup');
-      } catch (e) {
-        console.error('Error ending call:', e);
-      }
-    }
+    cleanupJitsi();
     navigate('/my-appointments');
+  };
+
+  const handleRetry = () => {
+    setError(null);
+    setLoading(true);
+    setScriptLoaded(false);
+    cleanupJitsi();
+    
+    // Remove the script and reload
+    const existingScript = document.getElementById('jitsi-meet-script');
+    if (existingScript) {
+      existingScript.remove();
+    }
+    
+    // Reload after a short delay
+    setTimeout(() => {
+      loadJitsiScript();
+    }, 500);
   };
 
   if (error) {
     return (
-      <div className="container py-5 text-center">
-        <div className="alert alert-danger">
-          <i className="bi bi-exclamation-triangle me-2"></i>
-          {error}
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-md-8">
+            <div className="alert alert-danger text-center">
+              <i className="bi bi-exclamation-triangle-fill me-2" style={{ fontSize: '2rem' }}></i>
+              <h4 className="alert-heading">Video Call Error</h4>
+              <p className="mb-0">{error}</p>
+            </div>
+            
+            <div className="text-center mt-4">
+              <button className="btn btn-success me-3" onClick={handleRetry}>
+                <i className="bi bi-arrow-clockwise me-2"></i>
+                Try Again
+              </button>
+              <button className="btn btn-primary" onClick={() => navigate('/my-appointments')}>
+                <i className="bi bi-arrow-left me-2"></i>
+                Back to Appointments
+              </button>
+            </div>
+
+            {/* Troubleshooting Tips */}
+            <div className="card mt-4">
+              <div className="card-body">
+                <h5 className="card-title">
+                  <i className="bi bi-info-circle me-2"></i>
+                  Troubleshooting Tips
+                </h5>
+                <ul className="mb-0">
+                  <li>Check your internet connection</li>
+                  <li>Allow camera and microphone permissions in your browser</li>
+                  <li>Try refreshing the page</li>
+                  <li>Make sure you're using a modern browser (Chrome, Firefox, Edge, Safari)</li>
+                  <li>Disable any VPN or proxy that might block video calls</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate('/my-appointments')}>
-          Back to Appointments
-        </button>
       </div>
     );
   }
@@ -175,7 +310,8 @@ const VideoCall = () => {
       top: 0,
       left: 0,
       zIndex: 9999,
-      backgroundColor: '#000'
+      backgroundColor: '#202124',
+      overflow: 'hidden'
     }}>
       {/* Header Bar */}
       <div style={{ 
@@ -189,16 +325,17 @@ const VideoCall = () => {
         zIndex: 10000,
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottom: '1px solid rgba(255,255,255,0.1)'
       }}>
         <div>
           <h5 className="mb-0" style={{ color: 'white' }}>
             <i className="bi bi-camera-video-fill me-2"></i>
             Video Consultation
           </h5>
-          {doctorName && (
-            <small style={{ color: '#ccc' }}>with {doctorName}</small>
-          )}
+          <small style={{ color: '#ccc' }}>
+            {doctorName ? `with Dr. ${doctorName}` : 'Connecting...'}
+          </small>
         </div>
         <button 
           className="btn btn-danger"
@@ -219,12 +356,20 @@ const VideoCall = () => {
           transform: 'translate(-50%, -50%)',
           zIndex: 10000,
           textAlign: 'center',
-          color: 'white'
+          color: 'white',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          padding: '3rem',
+          borderRadius: '1rem',
+          minWidth: '300px'
         }}>
-          <div className="spinner-border text-light mb-3" role="status">
+          <div className="spinner-border text-light mb-3" role="status" style={{ width: '3rem', height: '3rem' }}>
             <span className="visually-hidden">Loading...</span>
           </div>
-          <p>Connecting to video call...</p>
+          <h5 style={{ color: 'white', marginBottom: '1rem' }}>Connecting to video call...</h5>
+          <p style={{ color: '#ccc', marginBottom: '0.5rem' }}>
+            {!scriptLoaded ? 'Loading video call service...' : 'Joining meeting room...'}
+          </p>
+          <small style={{ color: '#999' }}>This may take a few moments</small>
         </div>
       )}
 
@@ -234,7 +379,8 @@ const VideoCall = () => {
         style={{ 
           height: '100%', 
           width: '100%',
-          paddingTop: '60px'
+          paddingTop: '60px',
+          backgroundColor: '#202124'
         }}
       />
     </div>
