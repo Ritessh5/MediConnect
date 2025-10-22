@@ -261,4 +261,5 @@ export const prescriptionAPI = {
       body: JSON.stringify(prescriptionData),
     });
   },
+
 };
