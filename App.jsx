@@ -13,6 +13,8 @@ import FindDoctorsPage from './frontend/pages/FindDoctorsPage.jsx';
 import ContactPage from './frontend/pages/ContactPage.jsx';
 import MyProfile from './frontend/pages/MyProfile.jsx';
 import Chat from './frontend/pages/Chat.jsx'; 
+import MyChatsList from './frontend/pages/MyChatsList.jsx';
+import VideoCall from './frontend/pages/VideoCall.jsx';
 import MyAppointmentsPage from './frontend/pages/MyAppointmentsPage.jsx';
 import MyPrescriptionsPage from './frontend/pages/MyPrescriptionsPage.jsx';
 import SettingsPage from './frontend/pages/SettingsPage.jsx';
@@ -48,6 +50,8 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/my-profile" element={<MyProfile />} />
               <Route path="/chat" element={<Chat />} /> 
+              <Route path="/my-chats" element={<MyChatsList />} />
+              <Route path="/video-call" element={<VideoCall />} />
               <Route path="/my-appointments" element={<MyAppointmentsPage />} />
               <Route path="/my-prescriptions" element={<MyPrescriptionsPage />} />
               <Route path="/settings" element={<SettingsPage />} />

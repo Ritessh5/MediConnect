@@ -1,8 +1,5 @@
-// File: src/frontend/component/common/Header.jsx
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// CORRECTED PATH: Up two levels (from common -> component -> frontend), then down into 'pages'
 import '../../pages/App.css'; 
 import logo from './MediConnectLogo.png'; 
 
@@ -64,38 +61,45 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
           
           <div className="d-flex align-items-center">
             {isLoggedIn ? (
-              <div className="dropdown">
-                {/* Profile Dropdown Button */}
-                <button
-                  className="nav-link dropdown-toggle"
-                  type="button"
-                  id="profileDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i className="bi bi-person-circle me-2"></i>{t('profile')}
-                </button>
-                {/* Dropdown Menu */}
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                  <li><Link className="dropdown-item" to="/my-profile">My Profile</Link></li>
-                  <li><Link className="dropdown-item" to="/my-appointments">My Appointments</Link></li>
-                  <li><Link className="dropdown-item" to="/my-prescriptions">My Prescriptions</Link></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  {/* --- LOGOUT BUTTON IMPLEMENTATION --- */}
-                  <li>
-                    <button 
-                      className="dropdown-item" 
-                      onClick={handleLogout}
-                    >
-                      Log Out
-                    </button>
-                  </li>
-                  {/* --- END LOGOUT BUTTON --- */}
-                </ul>
-              </div>
-            ) : (
-              <Link to="/auth" className="btn btn-success me-3">{t('login')}</Link>
-            )}
+  <div className="dropdown">
+    <button
+      className="nav-link dropdown-toggle"
+      type="button"
+      id="profileDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      <i className="bi bi-person-circle me-2"></i>{t('profile')}
+    </button>
+    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+      <li><Link className="dropdown-item" to="/my-profile">My Profile</Link></li>
+      
+      {/* Show different menu items based on user role */}
+      {JSON.parse(localStorage.getItem('user'))?.role === 'doctor' ? (
+        <>
+          <li><Link className="dropdown-item" to="/my-chats">
+            <i className="bi bi-chat-dots me-2"></i>My Chats
+          </Link></li>
+          <li><Link className="dropdown-item" to="/my-appointments">My Appointments</Link></li>
+        </>
+      ) : (
+        <>
+          <li><Link className="dropdown-item" to="/my-chats">
+            <i className="bi bi-chat-dots me-2"></i>My Chats
+          </Link></li>
+          <li><Link className="dropdown-item" to="/my-appointments">My Appointments</Link></li>
+          <li><Link className="dropdown-item" to="/my-prescriptions">My Prescriptions</Link></li>
+        </>
+      )}
+      
+      <li><hr className="dropdown-divider" /></li>
+      <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
+      <li><button className="dropdown-item" onClick={handleLogout}>Log Out</button></li>
+    </ul>
+  </div>
+) : (
+  <Link to="/auth" className="btn btn-success me-3">{t('login')}</Link>
+)}
           </div>
         </div>
       </div>
